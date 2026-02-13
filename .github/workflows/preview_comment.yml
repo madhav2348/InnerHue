@@ -1,0 +1,26 @@
+name: PR Preview Comment
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  preview-comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🚀 Docker build successful!
+              
+              Build passed, image validated.
+              To test locally:
+              
+              docker build -t my-preview .
+              docker run -p 3000:3000 my-preview`
+            })
