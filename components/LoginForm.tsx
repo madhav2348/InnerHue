@@ -24,7 +24,7 @@ export default function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     setServerError(null);
     try {
-      const toastId = toast.loading("Logging in...");
+      const toastId = toast.loading("Logging in..");
       console.log("Logging in with:", data);
       
       // Simulate API call
