@@ -31,8 +31,8 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm install --package-lock-only
-        run: npm ci
+        run: npm install --package-lock-only |
+             npm ci
 
       - name: Run linter
         run: npm run lint
