@@ -9,7 +9,6 @@ yarn-error.log*
 .env*.local
 
 # Git files
-.git
 .gitignore
 
 # Development and build artifacts
@@ -54,7 +53,6 @@ docs
 *.md
 
 # GitHub and other CI/CD
-.github
 .circleci
 
 # TypeScript build info
