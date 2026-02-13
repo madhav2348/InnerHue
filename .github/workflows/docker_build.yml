@@ -1,0 +1,59 @@
+name: Docker Build & Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          load: ${{ github.event_name == 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+
+      - name: Test container
+        run: |
+          TAG=$(echo "${{ steps.meta.outputs.tags }}" | head -n 1)
+          docker run -d -p 3000:3000 --name test "$TAG"
+          sleep 20
+          curl -f http://localhost:3000
+          docker stop test && docker rm test
+
+      - name: Validate image size (<300MB)
+        run: |
+          TAG=$(echo "${{ steps.meta.outputs.tags }}" | head -n 1)
+          SIZE=$(docker inspect "$TAG" --format='{{.Size}}')
+          MAX=314572800
+          if [ "$SIZE" -gt "$MAX" ]; then
+            echo "Image too large"
+            exit 1
+          fi
