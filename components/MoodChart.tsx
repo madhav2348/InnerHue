@@ -24,7 +24,7 @@ import { BarChart3, PieChart, Activity } from 'lucide-react';
 import { useMoodStore } from '@/lib/useMoodStore';
 
 export function MoodChart() {
-  // Get data from Zustand store with selective subscriptions
+  // Get data from Zustand store selective subscriptions
   const moodHistory = useMoodStore(state => state.moodHistory);
   const stats = useMoodStore(state => state.stats);
   
