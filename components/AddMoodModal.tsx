@@ -36,7 +36,7 @@ const COLOR_OPTIONS = [
 ];
 
 const CATEGORY_OPTIONS = [
-  'positive', 'negative', 'calm', 'energetic', 'stress', 'intense', 'neutral', 'playful'
+  'positive', 'negative', 'calm', 'energy', 'stress', 'intense', 'neutral', 'playful'
 ];
 
 export function AddMoodModal({ isOpen, onClose, onMoodAdded }: AddMoodModalProps) {
